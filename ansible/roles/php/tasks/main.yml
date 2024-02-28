@@ -1,0 +1,26 @@
+---
+- name: Update apt
+  become: yes
+  apt: update_cache=yes
+
+- name: Install php
+  become: yes
+  apt: pkg=php state=latest
+
+- name: purge apache2
+  ansible.builtin.apt:
+    name: apache2
+    purge: yes
+    autoremove: yes
+    state: absent
+  become: yes
+
+- name: Install php-fpm
+  become: yes
+  apt: pkg=php-fpm state=latest
+
+
+- name: Change default nginx site
+  become: yes
+  template: src=default dest=/etc/nginx/sites-available/default
+  notify: restart nginx
